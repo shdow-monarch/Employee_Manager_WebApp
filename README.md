@@ -1,7 +1,7 @@
 # Simple Employee Manager WebApp Using Vue.js Framework and Nodejs (Koa-js Framework)
 
 ## Live WebApp Link [![Netlify Status](https://api.netlify.com/api/v1/badges/d275be99-1420-4d52-a58f-cf0f828bd04e/deploy-status)](https://app.netlify.com/sites/employee-manager-webapp/deploys)
-Visit https://webapp.bharath.ga/ to see the webapp.
+Visit https://webapp.bharath.ga to see the webapp.
 
 ## Project Setup
 
