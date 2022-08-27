@@ -6,7 +6,7 @@
           {{ isEditable ? $t("formEditTitle") : $t("formAddTitle") }}
         </h1>
       </el-row>
-      <el-form v-if="isLoaded" ref="formData" :rules="formRules" :model="formData">
+      <el-form v-if="isLoaded" ref="formData" :rules="formRules" :model="formData" v-loading.lock="loading">
         <el-row class="personal-information">
           <h4>Personal Information:</h4>
           <el-row :gutter="15">
