@@ -1,23 +1,30 @@
-# employeelistwithaxios
+# Simple Employee List Manager Using Vue.js Framework and Nodejs (Koa-js Framework)
 
-## Project setup
+## Live WebApp Link
 ```
-npm install
+Visit https://webapp.bharath.ga/ to see the webapp.
 ```
+## Project Setup
 
-### Compiles and hot-reloads for development
+### Step after clone this repository
 ```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
+To install all the dependencies to run this webapp, cd into the cloned repository and then enter "npm install" command
+to install all the necessary dependancies to run this webapp.
 ```
 
-### Lints and fixes files
+### To compile and Run locally
 ```
-npm run lint
+After "npm install", to run this webapp locally in localhost:8080, run "npm run serve" command in terminal.
+```
+
+### To compile for Production build
+```
+To build a production build for deployement to the server enter "npm run build".
+```
+
+### Lints and fixes files syntax
+```
+By using es-lint and by running "npm run lint" command will fix the synta of Vue.js.
 ```
 
 ### Customize configuration
