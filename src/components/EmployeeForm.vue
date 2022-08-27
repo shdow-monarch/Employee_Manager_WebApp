@@ -197,9 +197,9 @@ export default {
     }
   },
   async mounted() {
-    this.employeeList = (await axios.get('http://my-koa-api.herokuapp.com/employee')).data
+    this.employeeList = (await axios.get('https://my-koa-api.herokuapp.com/employee')).data
     const id = this.$route.params.id
-    this.formData = !_.isEmpty(id) ? (await axios.get('http://my-koa-api.herokuapp.com/employee/' + id)).data : _.cloneDeep(this.constantFormData)
+    this.formData = !_.isEmpty(id) ? (await axios.get('https://my-koa-api.herokuapp.com/employee/' + id)).data : _.cloneDeep(this.constantFormData)
     this.isEditable = !_.isEmpty(this.$route.params.id)
     this.isLoaded = true
     this.loading = false
@@ -220,14 +220,14 @@ export default {
               this.loading = false
               return this.$message({ type: 'error', message: this.$t('alreadyExistMessage') })
             } else {
-              await axios.put('http://my-koa-api.herokuapp.com/employee/' + this.$route.params.id, this.formData)
+              await axios.put('https://my-koa-api.herokuapp.com/employee/' + this.$route.params.id, this.formData)
               this.$refs.formData.resetFields()
               this.$router.push('/')
               this.loading = false
             }
           } else {
             if (!isAddNewItem) {
-              await axios.post('http://my-koa-api.herokuapp.com/employee', this.formData)
+              await axios.post('https://my-koa-api.herokuapp.com/employee', this.formData)
               this.$refs.formData.resetFields()
               this.$router.push('/')
               this.loading = false
