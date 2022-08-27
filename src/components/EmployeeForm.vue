@@ -1,5 +1,5 @@
 <template>
-  <el-row class="form-main-container">
+  <el-row class="form-main-container" v-loading.lock="loading">
     <el-row class="form-container">
       <el-row class="form-header">
         <h1 class="pageTitle">
