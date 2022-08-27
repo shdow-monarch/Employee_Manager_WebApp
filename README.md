@@ -1,4 +1,4 @@
-# Simple Employee List Manager Using Vue.js Framework and Nodejs (Koa-js Framework)
+# Simple Employee Manager WebApp Using Vue.js Framework and Nodejs (Koa-js Framework)
 
 ## Live WebApp Link
 Visit https://webapp.bharath.ga/ to see the webapp.
