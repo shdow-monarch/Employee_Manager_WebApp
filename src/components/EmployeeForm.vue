@@ -2,7 +2,9 @@
   <el-row class="form-main-container" v-loading.lock="loading">
     <el-row class="form-container">
       <el-row class="form-header">
-        <h1 class="pageTitle">{{ isEditable ? $t('formEditTitle') : $t('formAddTitle') }}</h1>
+        <h1 class="pageTitle">
+          {{ isEditable ? $t("formEditTitle") : $t("formAddTitle") }}
+        </h1>
       </el-row>
       <el-form v-if="isLoaded" ref="formData" :rules="formRules" :model="formData">
         <el-row class="personal-information">
@@ -84,6 +86,14 @@
           <h4>Employee Details:</h4>
           <el-row :gutter="15">
             <el-col :lg="6" :md="6" :sm="12" :xs="12">
+              <el-form-item prop="employeeDetails.department" :label="$t('departmentLabel')">
+                <el-select v-model="formData.employeeDetails.department" placeholder="Select">
+                  <el-option v-for="(item, index) in departments" :key="index" :value="item" :label="item">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :lg="6" :md="6" :sm="12" :xs="12">
               <el-form-item prop="employeeDetails.position" :label="$t('positionLabel')">
                 <el-select v-model="formData.employeeDetails.position" placeholder="Select">
                   <el-option v-for="(item, index) in positions" :key="index" :value="item" :label="item">
@@ -124,14 +134,14 @@
                 </el-switch>
               </el-form-item>
             </el-col>
-            <el-col v-if="formData.employeeDetails.isContract" class="is-contract" :lg="6" md="6" sm="12" xs="12">
+            <el-col v-if="formData.employeeDetails.isContract" class="is-contract" :lg="6" :md="6" :sm="12" :xs="12">
               <el-form-item :label="$t('contractStartLabel')">
                 <el-date-picker v-model="formData.employeeDetails.contract.startDate" type="date"
                   placeholder="Join Date" value-format="dd/MM/yyyy">
                 </el-date-picker>
               </el-form-item>
             </el-col>
-            <el-col v-if="formData.employeeDetails.isContract" class="is-contract" :lg="6" md="6" sm="12" xs="12">
+            <el-col v-if="formData.employeeDetails.isContract" class="is-contract" :lg="6" :md="6" :sm="12" :xs="12">
               <el-form-item :label="$t('contractEndLabel')">
                 <el-date-picker type="date" v-model="formData.employeeDetails.contract.endDate" placeholder="End Date"
                   value-format="dd/MM/yyyy">
@@ -165,8 +175,10 @@
         </el-row>
         <el-form-item>
           <el-row class="form-footer">
-            <el-button @click="handleCancelClick">{{ $t('cancelButton') }}</el-button>
-            <el-button @click="handleSaveClick()" type="success">{{ isEditable ? $t('saveButton') : $t('addButton') }}
+            <el-button @click="handleCancelClick">{{
+            $t("cancelButton")
+            }}</el-button>
+            <el-button @click="handleSaveClick()" type="success">{{ isEditable ? $t("saveButton") : $t("addButton") }}
             </el-button>
           </el-row>
         </el-form-item>
@@ -175,11 +187,11 @@
   </el-row>
 </template>
 <script>
-import axios from 'axios'
-import _ from 'lodash'
-import Constants from '@/constants'
+import axios from "axios";
+import _ from "lodash";
+import Constants from "@/constants";
 export default {
-  name: 'EmployeeForm',
+  name: "EmployeeForm",
   data() {
     return {
       loading: false,
@@ -193,60 +205,98 @@ export default {
       isEditable: false,
       constantFormData: Constants.EMPLOYEE_DETAIL,
       formData: _.cloneDeep(this.constantFormData),
-      employeeList: []
-    }
+      employeeList: [],
+    };
   },
   async mounted() {
-    this.employeeList = (await axios.get('https://my-koa-api.herokuapp.com/employee')).data
-    const id = this.$route.params.id
-    this.formData = !_.isEmpty(id) ? (await axios.get('https://my-koa-api.herokuapp.com/employee/' + id)).data : _.cloneDeep(this.constantFormData)
-    this.isEditable = !_.isEmpty(this.$route.params.id)
-    this.isLoaded = true
-    this.loading = false
+    try {
+      this.employeeList = (
+        await axios.get("https://my-koa-api.herokuapp.com/employee")
+      ).data;
+      const id = this.$route.params.id;
+      this.formData = !_.isEmpty(id)
+        ? (await axios.get("https://my-koa-api.herokuapp.com/employee/" + id)).data
+        : _.cloneDeep(this.constantFormData);
+      this.isEditable = !_.isEmpty(this.$route.params.id);
+      this.isLoaded = true;
+      this.loading = false;
+    } catch (error) { console.log(error.message) }
   },
   methods: {
     handleCancelClick() {
-      this.$refs.formData.resetFields()
-      this.$router.push('/')
+      this.$refs.formData.resetFields();
+      this.$router.push("/");
     },
     handleSaveClick() {
-      this.loading = true
+      this.loading = true;
       this.$refs.formData.validate(async (valid) => {
         if (valid) {
-          const payloadIndex = this.employeeList.findIndex(item => item._id === this.formData._id)
-          const isAddNewItem = this.employeeList.some(item => item.firstName === this.formData.firstName && item.lastName === this.formData.lastName)
+          const payloadIndex = this.employeeList.findIndex(
+            (item) => item._id === this.formData._id
+          );
+          const isAddNewItem = this.employeeList.some(
+            (item) =>
+              item.firstName === this.formData.firstName &&
+              item.lastName === this.formData.lastName
+          );
           if (this.$route.params.id) {
-            if (this.employeeList.find((item, index) => item.firstName === this.formData.firstName && item.lastName === this.formData.lastName && index !== payloadIndex)) {
-              this.loading = false
-              return this.$message({ type: 'error', message: this.$t('alreadyExistMessage') })
+            if (
+              this.employeeList.find(
+                (item, index) =>
+                  item.firstName === this.formData.firstName &&
+                  item.lastName === this.formData.lastName &&
+                  index !== payloadIndex
+              )
+            ) {
+              this.loading = false;
+              return this.$message({
+                type: "error",
+                message: this.$t("alreadyExistMessage"),
+              });
             } else {
-              await axios.put('https://my-koa-api.herokuapp.com/employee/' + this.$route.params.id, this.formData)
-              this.$refs.formData.resetFields()
-              this.$router.push('/')
-              this.loading = false
+              try {
+                await axios.put(
+                  "https://my-koa-api.herokuapp.com/employee/" + this.$route.params.id,
+                  this.formData
+                );
+                this.$refs.formData.resetFields();
+                this.$router.push("/");
+                this.loading = false;
+              } catch (error) { console.log(error.message) }
             }
           } else {
             if (!isAddNewItem) {
-              await axios.post('https://my-koa-api.herokuapp.com/employee', this.formData)
-              this.$refs.formData.resetFields()
-              this.$router.push('/')
-              this.loading = false
+              try {
+                await axios.post("https://my-koa-api.herokuapp.com/employee", this.formData);
+                this.$router.push("/");
+                this.loading = false;
+              } catch (error) { console.log(error.message) }
             } else {
-              this.loading = false
-              return this.$message({ type: 'error', message: this.$t('alreadyExistMessage') })
+              this.loading = false;
+              return this.$message({
+                type: "error",
+                message: this.$t("alreadyExistMessage"),
+              });
             }
           }
-          this.loading = false
-          this.$message({ type: 'success', message: _.isEmpty(!this.$route.params.id) ? this.$t('updateMessage') : this.$t('addMessage') })
+          this.loading = false;
+          this.$message({
+            type: "success",
+            message: _.isEmpty(!this.$route.params.id)
+              ? this.$t("updateMessage")
+              : this.$t("addMessage"),
+          });
+        } else {
+          this.loading = false;
+          this.$message({
+            type: "error",
+            message: this.$t("formValidationMessage"),
+          });
         }
-        else {
-          this.loading = false
-          this.$message({ type: 'error', message: this.$t('formValidationMessage') })
-        }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 
 <style>

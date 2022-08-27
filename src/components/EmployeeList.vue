@@ -85,7 +85,7 @@ export default {
         this.loading = false
       } catch (error) {
         this.loading = false
-        console.log(error)
+        console.log(error.message)
       }
     },
     handleAddClick() {
@@ -102,9 +102,11 @@ export default {
         cancelButtonText: 'No',
         type: 'warning'
       }).then(async () => {
-        await axios.delete('http://my-koa-api.herokuapp.com/employee/' + rowId)
-        this.$message({ type: 'success', message: this.$t('deleteMessage') })
-        this.fetchListItems()
+        try {
+          await axios.delete('https://my-koa-api.herokuapp.com/employee/' + rowId)
+          this.$message({ type: 'success', message: this.$t('deleteMessage') })
+          this.fetchListItems()
+        } catch (error) { console.log(error.message) }
       }).catch(async () => {
         this.loading = false
         this.$message({ type: 'info', message: this.$t('deleteCancelMessage') })
