@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/d275be99-1420-4d52-a58f-cf0f828bd04e/deploy-status)](https://app.netlify.com/sites/employee-manager-webapp/deploys)
+
 # Simple Employee Manager WebApp Using Vue.js Framework and Nodejs (Koa-js Framework)
 
 ## Live WebApp Link
@@ -25,4 +27,3 @@ By using es-lint and by running ```npm run lint``` command will fix the synta of
 ### Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
-[![Netlify Status](https://api.netlify.com/api/v1/badges/d275be99-1420-4d52-a58f-cf0f828bd04e/deploy-status)](https://app.netlify.com/sites/employee-manager-webapp/deploys)
