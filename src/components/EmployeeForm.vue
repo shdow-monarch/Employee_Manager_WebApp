@@ -129,7 +129,7 @@
               <el-form-item :label="$t('csvFileLabel')">
                 <el-upload action="#" :file-list="fileList" :on-change="getFile" :on-remove="removeFile"
                   :auto-upload="false" accept=".csv" :limit=1 :multiple=false>
-                  <el-button type="primary">Upload</el-button>
+                  <el-button icon="el-icon-upload" type="primary">Upload</el-button>
                 </el-upload>
               </el-form-item>
             </el-col>
