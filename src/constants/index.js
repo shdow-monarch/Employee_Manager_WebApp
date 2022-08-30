@@ -1,5 +1,4 @@
 /* eslint-disable no-useless-escape */
-//test
 const CONSTANTS = {
   STATE_LIST: [
     'Andhra Pradesh',
