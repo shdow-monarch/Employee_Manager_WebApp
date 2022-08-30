@@ -5,7 +5,7 @@
         <h1 class="header-title">{{  $t('listTitle')  }}</h1>
       </el-col>
       <el-col :lg="12" :md="12" :sm="12" :xs="12">
-        <el-button @click="handleAddClick()" type="success" class="add-btn">{{  $t('listAddButton')  }}</el-button>
+        <el-button icon="el-icon-circle-plus" @click="handleAddClick()" type="success" class="add-btn">{{  $t('listAddButton')  }}</el-button>
       </el-col>
     </el-row>
     <el-row class="table-container">
@@ -54,8 +54,8 @@
         </el-table-column>
         <el-table-column :label="$t('tableActionsLabel')" fixed="right" width="200" align="center">
           <template slot-scope="scope">
-            <el-button @click="handleEditClick(scope.row)" size="mini">{{  $t('editButton')  }}</el-button>
-            <el-button @click="handleDeleteClick(scope.row._id)" type="danger" size="mini">{{  $t('deleteButton')  }}
+            <el-button icon="el-icon-edit" @click="handleEditClick(scope.row)" size="mini">{{  $t('editButton')  }}</el-button>
+            <el-button icon="el-icon-delete" @click="handleDeleteClick(scope.row._id)" type="danger" size="mini">{{  $t('deleteButton')  }}
             </el-button>
           </template>
         </el-table-column>
