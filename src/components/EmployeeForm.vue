@@ -218,7 +218,7 @@ export default {
     this.employeeList = (await axios.get('https://my-koa-api.herokuapp.com/employee')).data
     const id = this.$route.params.id
     this.formData = !_.isEmpty(id) ? (await axios.get('https://my-koa-api.herokuapp.com/employee/' + id)).data : _.cloneDeep(this.constantFormData)
-    this.fileList = !_.isEmpty(id) ? [{ "name": this.formData.employeeDetails.csvFile.fileName, "size": this.formData.employeeDetails.csvFile.size, "url": this.formData.employeeDetails.csvFile.base64URL }] : []
+    this.fileList = !_.isEmpty(this.formData.employeeDetails.csvFile.id) ? [{ "name": this.formData.employeeDetails.csvFile.fileName, "size": this.formData.employeeDetails.csvFile.size, "url": this.formData.employeeDetails.csvFile.base64URL }] : []
     this.isEditable = !_.isEmpty(this.$route.params.id)
     this.isLoaded = true
     this.loading = false
