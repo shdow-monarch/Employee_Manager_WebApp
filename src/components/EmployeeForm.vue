@@ -126,7 +126,7 @@
           </el-row>
           <el-row :gutter="15">
             <el-col :lg="6" :md="6" :sm="12" :xs="12">
-              <el-form-item label="csv File">
+              <el-form-item :label="$t('csvFileLabel')">
                 <el-upload action="#" :file-list="fileList" :on-change="getFile" :on-remove="removeFile"
                   :auto-upload="false" accept=".csv" :limit=1 :multiple=false>
                   <el-button type="primary">Upload</el-button>
