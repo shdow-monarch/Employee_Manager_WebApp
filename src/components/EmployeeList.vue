@@ -2,10 +2,10 @@
   <el-row class="main-container" v-loading.lock="loading">
     <el-row class="header-container">
       <el-col :lg="12" :md="12" :sm="12" :xs="12">
-        <h1 class="header-title">{{ $t('listTitle') }}</h1>
+        <h1 class="header-title">{{  $t('listTitle')  }}</h1>
       </el-col>
       <el-col :lg="12" :md="12" :sm="12" :xs="12">
-        <el-button @click="handleAddClick()" type="success" class="add-btn">{{ $t('listAddButton') }}</el-button>
+        <el-button @click="handleAddClick()" type="success" class="add-btn">{{  $t('listAddButton')  }}</el-button>
       </el-col>
     </el-row>
     <el-row class="table-container">
@@ -29,15 +29,15 @@
           <el-table-column prop="employeeDetails.position" :label="$t('positionLabel')" width="200">
           </el-table-column>
           <el-table-column prop="employeeDetails.skills" :label="$t('skillsLabel')" width="200">
-            <template slot-scope="scope">{{ scope.row.employeeDetails.skills.join(', ') }}</template>
+            <template slot-scope="scope">{{  scope.row.employeeDetails.skills.join(', ')  }}</template>
           </el-table-column>
           <el-table-column prop="employeeDetails.type" :label="$t('typeLabel')" width="200">
           </el-table-column>
           <el-table-column prop="employeeDetails.salary" :label="$t('salaryLabel')" width="200" align="right">
-            <template slot-scope="scope">{{ scope.row.employeeDetails.salary }}</template>
+            <template slot-scope="scope">{{  scope.row.employeeDetails.salary  }}</template>
           </el-table-column>
           <el-table-column prop="employeeDetails.isContract" :label="$t('contractLabel')" width="200">
-            <template slot-scope="scope">{{ scope.row.employeeDetails.isContract }}</template>
+            <template slot-scope="scope">{{  scope.row.employeeDetails.isContract  }}</template>
           </el-table-column>
           <el-table-column prop="employeeDetails.contract.startDate" :label="$t('contractStartLabel')" width="200">
           </el-table-column>
@@ -54,8 +54,8 @@
         </el-table-column>
         <el-table-column :label="$t('tableActionsLabel')" fixed="right" width="200" align="center">
           <template slot-scope="scope">
-            <el-button @click="handleEditClick(scope.row)" size="mini">{{ $t('editButton') }}</el-button>
-            <el-button @click="handleDeleteClick(scope.row._id)" type="danger" size="mini">{{ $t('deleteButton') }}
+            <el-button @click="handleEditClick(scope.row)" size="mini">{{  $t('editButton')  }}</el-button>
+            <el-button @click="handleDeleteClick(scope.row._id)" type="danger" size="mini">{{  $t('deleteButton')  }}
             </el-button>
           </template>
         </el-table-column>
@@ -85,7 +85,7 @@ export default {
         this.loading = false
       } catch (error) {
         this.loading = false
-        console.log(error.message)
+        console.log(error)
       }
     },
     handleAddClick() {
@@ -102,11 +102,9 @@ export default {
         cancelButtonText: 'No',
         type: 'warning'
       }).then(async () => {
-        try {
-          await axios.delete('https://my-koa-api.herokuapp.com/employee/' + rowId)
-          this.$message({ type: 'success', message: this.$t('deleteMessage') })
-          this.fetchListItems()
-        } catch (error) { console.log(error.message) }
+        await axios.delete('https://my-koa-api.herokuapp.com/employee/' + rowId)
+        this.$message({ type: 'success', message: this.$t('deleteMessage') })
+        this.fetchListItems()
       }).catch(async () => {
         this.loading = false
         this.$message({ type: 'info', message: this.$t('deleteCancelMessage') })

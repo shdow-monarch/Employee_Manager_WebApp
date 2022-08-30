@@ -2,9 +2,7 @@
   <el-row class="form-main-container" v-loading.lock="loading">
     <el-row class="form-container">
       <el-row class="form-header">
-        <h1 class="pageTitle">
-          {{ isEditable ? $t("formEditTitle") : $t("formAddTitle") }}
-        </h1>
+        <h1 class="pageTitle">{{  isEditable ? $t('formEditTitle') : $t('formAddTitle')  }}</h1>
       </el-row>
       <el-form v-if="isLoaded" ref="formData" :rules="formRules" :model="formData">
         <el-row class="personal-information">
@@ -128,6 +126,14 @@
           </el-row>
           <el-row :gutter="15">
             <el-col :lg="6" :md="6" :sm="12" :xs="12">
+              <el-form-item label="csv File">
+                <el-upload action="#" :file-list="fileList" :on-change="getFile" :on-remove="removeFile"
+                  :auto-upload="false" accept=".csv" :limit=1 :multiple=false>
+                  <el-button type="primary">Upload</el-button>
+                </el-upload>
+              </el-form-item>
+            </el-col>
+            <el-col :lg="6" :md="6" :sm="12" :xs="12">
               <el-form-item :label="$t('contractLabel')">
                 <el-switch v-model="formData.employeeDetails.isContract" active-color="#13ce66"
                   inactive-color="#ff4949">
@@ -175,10 +181,8 @@
         </el-row>
         <el-form-item>
           <el-row class="form-footer">
-            <el-button @click="handleCancelClick">{{
-            $t("cancelButton")
-            }}</el-button>
-            <el-button @click="handleSaveClick()" type="success">{{ isEditable ? $t("saveButton") : $t("addButton") }}
+            <el-button @click="handleCancelClick">{{ $t('cancelButton') }}</el-button>
+            <el-button @click="handleSaveClick()" type="success">{{ isEditable ? $t('saveButton') : $t('addButton') }}
             </el-button>
           </el-row>
         </el-form-item>
@@ -187,116 +191,105 @@
   </el-row>
 </template>
 <script>
-import axios from "axios";
-import _ from "lodash";
-import Constants from "@/constants";
+import axios from 'axios'
+import _ from 'lodash'
+import { v4 as uuidv4 } from 'uuid'
+import Constants from '@/constants'
 export default {
-  name: "EmployeeForm",
+  name: 'EmployeeForm',
   data() {
     return {
       loading: false,
       isLoaded: false,
+      isEditable: false,
       states: Constants.STATE_LIST,
       skillsList: Constants.SKILL_LIST,
       departments: Constants.DEPARTMENT_LIST,
       positions: Constants.POSITION_LIST,
       types: Constants.EMPLOYEE_TYPE_LIST,
       formRules: Constants.EMPLOYEE_FORM_RULES,
-      isEditable: false,
+      fileList: [],
       constantFormData: Constants.EMPLOYEE_DETAIL,
       formData: _.cloneDeep(this.constantFormData),
-      employeeList: [],
-    };
+      employeeList: []
+    }
   },
   async mounted() {
-    try {
-      this.employeeList = (
-        await axios.get("https://my-koa-api.herokuapp.com/employee")
-      ).data;
-      const id = this.$route.params.id;
-      this.formData = !_.isEmpty(id)
-        ? (await axios.get("https://my-koa-api.herokuapp.com/employee/" + id)).data
-        : _.cloneDeep(this.constantFormData);
-      this.isEditable = !_.isEmpty(this.$route.params.id);
-      this.isLoaded = true;
-      this.loading = false;
-    } catch (error) { console.log(error.message) }
+    this.employeeList = (await axios.get('https://my-koa-api.herokuapp.com/employee')).data
+    const id = this.$route.params.id
+    this.formData = !_.isEmpty(id) ? (await axios.get('https://my-koa-api.herokuapp.com/employee/' + id)).data : _.cloneDeep(this.constantFormData)
+    this.fileList = !_.isEmpty(id) ? [{ "name": this.formData.employeeDetails.csvFile.fileName, "size": this.formData.employeeDetails.csvFile.size, "url": this.formData.employeeDetails.csvFile.base64URL }] : []
+    this.isEditable = !_.isEmpty(this.$route.params.id)
+    this.isLoaded = true
+    this.loading = false
   },
   methods: {
     handleCancelClick() {
-      this.$refs.formData.resetFields();
-      this.$router.push("/");
+      this.$refs.formData.resetFields()
+      this.$router.push('/')
     },
-    handleSaveClick() {
-      this.loading = true;
+    async handleSaveClick() {
+      if (!_.isEmpty(this.fileList)) {
+        await this.storeFile()
+      }
+      this.loading = true
       this.$refs.formData.validate(async (valid) => {
         if (valid) {
-          const payloadIndex = this.employeeList.findIndex(
-            (item) => item._id === this.formData._id
-          );
-          const isAddNewItem = this.employeeList.some(
-            (item) =>
-              item.firstName === this.formData.firstName &&
-              item.lastName === this.formData.lastName
-          );
+          const payloadIndex = this.employeeList.findIndex(item => item._id === this.formData._id)
+          const isAddNewItem = this.employeeList.some(item => item.firstName === this.formData.firstName && item.lastName === this.formData.lastName)
           if (this.$route.params.id) {
-            if (
-              this.employeeList.find(
-                (item, index) =>
-                  item.firstName === this.formData.firstName &&
-                  item.lastName === this.formData.lastName &&
-                  index !== payloadIndex
-              )
-            ) {
-              this.loading = false;
-              return this.$message({
-                type: "error",
-                message: this.$t("alreadyExistMessage"),
-              });
+            if (this.employeeList.find((item, index) => item.firstName === this.formData.firstName && item.lastName === this.formData.lastName && index !== payloadIndex)) {
+              this.loading = false
+              return this.$message({ type: 'error', message: this.$t('alreadyExistMessage') })
             } else {
-              try {
-                await axios.put(
-                  "https://my-koa-api.herokuapp.com/employee/" + this.$route.params.id,
-                  this.formData
-                );
-                this.$refs.formData.resetFields();
-                this.$router.push("/");
-                this.loading = false;
-              } catch (error) { console.log(error.message) }
+              await axios.put('https://my-koa-api.herokuapp.com/employee/' + this.$route.params.id, this.formData)
+              this.$refs.formData.resetFields()
+              this.$router.push('/')
+              this.loading = false
             }
           } else {
             if (!isAddNewItem) {
-              try {
-                await axios.post("https://my-koa-api.herokuapp.com/employee", this.formData);
-                this.$router.push("/");
-                this.loading = false;
-              } catch (error) { console.log(error.message) }
+              await axios.post('https://my-koa-api.herokuapp.com/employee', this.formData)
+              this.$refs.formData.resetFields()
+              this.$router.push('/')
+              this.loading = false
             } else {
-              this.loading = false;
-              return this.$message({
-                type: "error",
-                message: this.$t("alreadyExistMessage"),
-              });
+              this.loading = false
+              return this.$message({ type: 'error', message: this.$t('alreadyExistMessage') })
             }
           }
-          this.loading = false;
-          this.$message({
-            type: "success",
-            message: _.isEmpty(!this.$route.params.id)
-              ? this.$t("updateMessage")
-              : this.$t("addMessage"),
-          });
-        } else {
-          this.loading = false;
-          this.$message({
-            type: "error",
-            message: this.$t("formValidationMessage"),
-          });
+          this.loading = false
+          this.$message({ type: 'success', message: _.isEmpty(!this.$route.params.id) ? this.$t('updateMessage') : this.$t('addMessage') })
         }
-      });
+        else {
+          this.loading = false
+          this.$message({ type: 'error', message: this.$t('formValidationMessage') })
+        }
+      })
     },
-  },
-};
+    async getFile(file) {
+      this.fileList.push(file)
+    },
+    removeFile() {
+      this.fileList.splice(0, 1)
+    },
+    async getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new window.FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = error => reject(error)
+      })
+    },
+    async storeFile() {
+      this.formData.employeeDetails.csvFile.id = uuidv4()
+      this.formData.employeeDetails.csvFile.fileName = this.fileList[0].name
+      this.formData.employeeDetails.csvFile.contentType = this.fileList[0].raw.type
+      this.formData.employeeDetails.csvFile.base64URL = await this.getBase64(this.fileList[0].raw)
+      this.formData.employeeDetails.csvFile.size = this.fileList[0].size
+    }
+  }
+}
 </script>
 
 <style>

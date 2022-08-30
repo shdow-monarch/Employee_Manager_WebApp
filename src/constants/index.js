@@ -1,3 +1,5 @@
+/* eslint-disable no-useless-escape */
+//test
 const CONSTANTS = {
   STATE_LIST: [
     'Andhra Pradesh',
@@ -79,6 +81,13 @@ const CONSTANTS = {
       contract: {
         startDate: '',
         endDate: ''
+      },
+      csvFile: {
+        id: '',
+        fileName: '',
+        contentType: '',
+        base64URL: '',
+        size: 0
       }
     },
     bankDetails: {
