@@ -21,6 +21,7 @@
     "typeLabel": "Employee Type",
     "skillsLabel": "Skills",
     "salaryLabel": "Salary",
+    "csvFileLabel": ".csv File",
     "contractLabel": "is Contract",
     "contractStartLabel": "Start Date",
     "contractEndLabel": "End Date",
